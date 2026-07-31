@@ -1,1 +1,62 @@
-# discord_user_install
+# Discord ユーザーインストール Bot
+
+Discordのユーザーインストールに対応した、Cloudflare Workers製のInteractionsエンドポイントです。
+サーバーへBotユーザーを追加せず、ユーザーアカウントに追加したアプリから `/ping` コマンドを実行できます。
+
+## 必要な環境
+
+- Node.js 22以上
+- npm
+- Cloudflareアカウント（デプロイ時）
+- Discord Developer Portalで作成したアプリ
+
+## セットアップ
+
+```bash
+npm install
+cp .dev.vars.example .dev.vars
+```
+
+`.dev.vars` にDiscordアプリの公開鍵を設定します。公開鍵はDeveloper Portalの General Information にあります。
+
+```text
+DISCORD_PUBLIC_KEY=your_discord_application_public_key
+```
+
+型定義生成とローカル起動:
+
+```bash
+npm run types
+npm run dev
+```
+
+## Discord側の設定
+
+1. Developer Portalの Installation で User Install を有効にする
+2. User Installのスコープに `applications.commands` を設定する
+3. `/ping` コマンドを登録する
+
+```bash
+DISCORD_APPLICATION_ID=アプリケーションID \
+DISCORD_TOKEN=Botトークン \
+npm run register
+```
+
+`DISCORD_TOKEN` はコマンド登録スクリプトだけで使用します。Worker本体には不要です。
+
+## デプロイ
+
+```bash
+npx wrangler login
+npm run deploy
+npx wrangler secret put DISCORD_PUBLIC_KEY
+```
+
+デプロイ後に表示されたWorker URLの `/interactions` を、Developer Portalの General Information > Interactions Endpoint URL に設定します。
+Discordの検証リクエストに成功し、`/ping` が登録済みであれば、ユーザーインストールしたアプリから実行できます。
+
+## コマンド
+
+- `GET /`：稼働確認
+- `POST /interactions`：Discord Interactions受信（署名検証付き）
+- `POST /register`：未提供。コマンド登録はローカルの `scripts/register.ts` で実行
