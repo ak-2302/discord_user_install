@@ -15,4 +15,4 @@ const response = await fetch(`https://discord.com/api/v10/applications/${applica
 });
 
 if (!response.ok) throw new Error(`Discord API error ${response.status}: ${await response.text()}`);
-console.log("/ping コマンドを登録しました。");
+console.log(`${definitions.length}個のコマンドを登録しました: ${definitions.map((command) => `/${command.name}`).join(", ")}`);
