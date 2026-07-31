@@ -75,5 +75,6 @@ Discordの検証リクエストに成功し、`/ping` が登録済みであれ�
 - `/qr`：テキストやURLのQRコード（例：`url:https://example.com`）
 - `/coin`：コインの表・裏を抽選
 - `/choice`：A〜Dの候補から1つを抽選（例：`a:A b:B c:C d:D`）
+- `/poke`：ポケモン名からヤッくんの図鑑ページを検索（例：`name:ピカチュウ`）
 
 コマンドの実装は `src/commands/` に1コマンド1ファイルで追加します。定義と処理を作成した後、`src/commands/index.ts` に登録してください。
