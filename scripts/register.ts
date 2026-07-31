@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { definitions } from "../src/commands";
 
 const applicationId = process.env.DISCORD_APPLICATION_ID;

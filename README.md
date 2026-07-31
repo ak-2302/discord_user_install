@@ -15,12 +15,20 @@ Discordのユーザーインストールに対応した、Cloudflare Workers製�
 ```bash
 npm install
 cp .dev.vars.example .dev.vars
+cp .env.example .env
 ```
 
 `.dev.vars` にDiscordアプリの公開鍵を設定します。公開鍵はDeveloper Portalの General Information にあります。
 
 ```text
 DISCORD_PUBLIC_KEY=your_discord_application_public_key
+```
+
+`.env` にはコマンド登録用のアプリケーションIDとBotトークンを設定します。`.env` はGitにコミットしません。
+
+```text
+DISCORD_APPLICATION_ID=your_discord_application_id
+DISCORD_TOKEN=your_discord_bot_token
 ```
 
 型定義生成とローカル起動:
@@ -37,8 +45,6 @@ npm run dev
 3. `/ping` コマンドを登録する
 
 ```bash
-DISCORD_APPLICATION_ID=アプリケーションID \
-DISCORD_TOKEN=Botトークン \
 npm run register
 ```
 

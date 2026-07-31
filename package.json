@@ -12,6 +12,7 @@
   },
   "devDependencies": {
     "@types/node": "latest",
+    "dotenv": "latest",
     "tsx": "latest",
     "typescript": "latest",
     "wrangler": "latest"
