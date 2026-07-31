@@ -77,6 +77,7 @@ Discordの検証リクエストに成功し、`/ping` が登録済みであれ�
 - `/choice`：A〜Dの候補から1つを抽選（例：`a:A b:B c:C d:D`）
 - `/poke`：ポケモン名からヤッくんの図鑑ページを検索（例：`name:ピカチュウ`）
 - `/league`：LoL日本語Wiki・OP.GG・LoLalyticsのチャンピオンページを表示（例：`champion:ゾーイ`）
+- `/unite`：ポケモンユナイト日本語Wikiのページを表示（例：`pokemon:アブソル`）
 
 全コマンドはユーザーインストールに対応し、Bot DM・通常DM・グループDMで利用できます。コマンド定義を変更した場合は `npm run register` で再登録してください。
 
