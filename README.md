@@ -60,3 +60,5 @@ Discordの検証リクエストに成功し、`/ping` が登録済みであれ�
 - `GET /`：稼働確認
 - `POST /interactions`：Discord Interactions受信（署名検証付き）
 - `POST /register`：未提供。コマンド登録はローカルの `scripts/register.ts` で実行
+
+コマンドの実装は `src/commands/` に1コマンド1ファイルで追加します。定義と処理を作成した後、`src/commands/index.ts` に登録してください。

@@ -1,7 +1,5 @@
-interface DiscordInteraction {
-  type: number;
-  data?: { name?: string };
-}
+import { handleCommand } from "./commands";
+import type { CommandInteraction } from "./commands/types";
 
 type RuntimeEnv = Env & { DISCORD_PUBLIC_KEY: string };
 
@@ -55,11 +53,9 @@ export default {
     }
     if (!body) return new Response(" invalid request signature", { status: 401 });
 
-    const interaction = JSON.parse(body) as DiscordInteraction;
+    const interaction = JSON.parse(body) as CommandInteraction;
     if (interaction.type === 1) return json({ type: 1 });
-    if (interaction.type === 2 && interaction.data?.name === "ping") {
-      return json({ type: 4, data: { content: "Pong!", flags: 64 } });
-    }
+    if (interaction.type === 2) return handleCommand(interaction.data?.name, interaction) ?? json({ type: 4, data: { content: "未対応のコマンドです。", flags: 64 } });
     return json({ type: 4, data: { content: "未対応のコマンドです。", flags: 64 } });
   },
 } satisfies ExportedHandler<RuntimeEnv>;

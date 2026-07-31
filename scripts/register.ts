@@ -1,3 +1,5 @@
+import { definitions } from "../src/commands";
+
 const applicationId = process.env.DISCORD_APPLICATION_ID;
 const token = process.env.DISCORD_TOKEN;
 
@@ -8,7 +10,7 @@ if (!applicationId || !token) throw new Error("DISCORD_APPLICATION_ID と DISCOR
 const response = await fetch(`https://discord.com/api/v10/applications/${applicationId}/commands`, {
   method: "PUT",
   headers: { Authorization: `Bot ${token}`, "Content-Type": "application/json" },
-  body: JSON.stringify([{ name: "ping", description: "応答確認をします" }]),
+  body: JSON.stringify(definitions),
 });
 
 if (!response.ok) throw new Error(`Discord API error ${response.status}: ${await response.text()}`);
