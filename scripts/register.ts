@@ -11,7 +11,11 @@ if (!applicationId || !token) throw new Error("DISCORD_APPLICATION_ID と DISCOR
 const response = await fetch(`https://discord.com/api/v10/applications/${applicationId}/commands`, {
   method: "PUT",
   headers: { Authorization: `Bot ${token}`, "Content-Type": "application/json" },
-  body: JSON.stringify(definitions),
+  body: JSON.stringify(definitions.map((command) => ({
+    ...command,
+    integration_types: [1],
+    contexts: [1, 2],
+  }))),
 });
 
 if (!response.ok) throw new Error(`Discord API error ${response.status}: ${await response.text()}`);
