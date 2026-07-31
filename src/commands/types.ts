@@ -12,4 +12,4 @@ export interface DiscordCommand {
   options?: Array<Record<string, unknown>>;
 }
 
-export type CommandHandler = (interaction: CommandInteraction) => Response | null;
+export type CommandHandler = (interaction: CommandInteraction) => Response | null | Promise<Response | null>;
