@@ -79,6 +79,6 @@ Discordの検証リクエストに成功し、`/ping` が登録済みであれ�
 - `/league`：LoL日本語Wiki・OP.GG・LoLalyticsのチャンピオンページを表示（例：`champion:ゾーイ`）
 - `/unite`：ポケモンユナイト日本語Wikiのページを表示（例：`pokemon:アブソル`）
 
-全コマンドはユーザーインストールに対応し、Bot DM・通常DM・グループDMで利用できます。コマンド定義を変更した場合は `npm run register` で再登録してください。
+全コマンドはユーザーインストールに対応し、サーバー内チャンネル・Bot DM・通常DM・グループDMで利用できます。コマンド定義を変更した場合は `npm run register` で再登録してください。
 
 コマンドの実装は `src/commands/` に1コマンド1ファイルで追加します。定義と処理を作成した後、`src/commands/index.ts` に登録してください。

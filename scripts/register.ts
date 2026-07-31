@@ -14,7 +14,7 @@ const response = await fetch(`https://discord.com/api/v10/applications/${applica
   body: JSON.stringify(definitions.map((command) => ({
     ...command,
     integration_types: [1],
-    contexts: [1, 2],
+    contexts: [0, 1, 2],
   }))),
 });
 
