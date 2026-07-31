@@ -65,9 +65,9 @@ Discordの検証リクエストに成功し、`/ping` が登録済みであれ�
 
 - `/ping`：応答確認
 - `/dice`：`XdY`形式で指定したサイコロを振る（例：`roll:2d6`、`roll:3d8`）
-- `/weather`：都市の現在の天気（例：`city:Tokyo`）
-- `/qr`：テキストやURLのQRコード（例：`text:https://example.com`）
+- `/weather`：Tokyo・Osaka・Sapporo・Fukuokaの現在の天気
+- `/qr`：テキストやURLのQRコード（例：`url:https://example.com`）
 - `/coin`：コインの表・裏を抽選
-- `/choice`：候補から1つを抽選（例：`options:ラーメン,カレー,そば`）
+- `/choice`：A〜Dの候補から1つを抽選（例：`a:A b:B c:C d:D`）
 
 コマンドの実装は `src/commands/` に1コマンド1ファイルで追加します。定義と処理を作成した後、`src/commands/index.ts` に登録してください。

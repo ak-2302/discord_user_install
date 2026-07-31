@@ -3,12 +3,11 @@ import type { CommandHandler, DiscordCommand } from "./types";
 export const definition: DiscordCommand = {
   name: "choice",
   description: "候補から1つをランダムに選びます",
-  options: [{ type: 3, name: "options", description: "カンマ区切りの候補（例: ラーメン,カレー,そば）", required: true }],
+  options: ["A", "B", "C", "D"].map((name) => ({ type: 3, name: name.toLowerCase(), description: `候補 ${name}`, required: name === "A" })),
 };
 
 export const handle: CommandHandler = (interaction) => {
-  const input = String(interaction.data?.options?.find((option) => option.name === "options")?.value ?? "");
-  const choices = input.split(",").map((choice) => choice.trim()).filter(Boolean);
+  const choices = (interaction.data?.options ?? []).map((option) => String(option.value).trim()).filter(Boolean);
   if (choices.length < 2) {
     return new Response(JSON.stringify({ type: 4, data: { content: "候補をカンマ区切りで2つ以上指定してください。", flags: 64 } }), {
       headers: { "content-type": "application/json" },
