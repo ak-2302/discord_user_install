@@ -7,9 +7,10 @@ import * as choice from "./choice";
 import * as poke from "./poke";
 import * as league from "./league";
 import * as unite from "./unite";
+import * as calc from "./calc";
 import type { CommandHandler, DiscordCommand } from "./types";
 
-export const definitions: DiscordCommand[] = [ping.definition, dice.definition, weather.definition, qr.definition, coin.definition, choice.definition, poke.definition, league.definition, unite.definition];
+export const definitions: DiscordCommand[] = [ping.definition, dice.definition, weather.definition, qr.definition, coin.definition, choice.definition, poke.definition, league.definition, unite.definition, calc.definition];
 
 const handlers = new Map<string, CommandHandler>([
   [ping.definition.name, ping.handle],
@@ -21,6 +22,7 @@ const handlers = new Map<string, CommandHandler>([
   [poke.definition.name, poke.handle],
   [league.definition.name, league.handle],
   [unite.definition.name, unite.handle],
+  [calc.definition.name, calc.handle],
 ]);
 
 export function handleCommand(name: string | undefined, interaction: Parameters<CommandHandler>[0]): ReturnType<CommandHandler> {
