@@ -1,1 +1,4 @@
 DISCORD_PUBLIC_KEY=your_discord_application_public_key
+GAS_WEB_APP_URL=https://script.google.com/macros/s/your_deployment_id/exec
+GAS_SHARED_TOKEN=replace_with_a_long_random_secret
+DISCORD_ALLOWED_USER_ID=your_discord_user_id

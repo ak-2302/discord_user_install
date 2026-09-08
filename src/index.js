@@ -53,7 +53,7 @@ export default {
 
     const interaction = JSON.parse(body);
     if (interaction.type === 1) return json({ type: 1 });
-    if (interaction.type === 2) return (await handleCommand(interaction.data?.name, interaction)) ?? json({ type: 4, data: { content: "未対応のコマンドです。", flags: 64 } });
+    if (interaction.type === 2) return (await handleCommand(interaction.data?.name, interaction, env)) ?? json({ type: 4, data: { content: "未対応のコマンドです。", flags: 64 } });
     return json({ type: 4, data: { content: "未対応のコマンドです。", flags: 64 } });
   },
 };

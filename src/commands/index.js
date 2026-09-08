@@ -8,8 +8,10 @@ import * as poke from "./poke.js";
 import * as league from "./league.js";
 import * as unite from "./unite.js";
 import * as calc from "./calc.js";
+import * as schedule from "./schedule.js";
+import * as mail from "./mail.js";
 
-export const definitions  = [ping.definition, dice.definition, weather.definition, qr.definition, coin.definition, choice.definition, poke.definition, league.definition, unite.definition, calc.definition];
+export const definitions = [ping.definition, dice.definition, weather.definition, qr.definition, coin.definition, choice.definition, poke.definition, league.definition, unite.definition, calc.definition, schedule.definition, mail.definition];
 
 const handlers = new Map([
   [ping.definition.name, ping.handle],
@@ -22,8 +24,10 @@ const handlers = new Map([
   [league.definition.name, league.handle],
   [unite.definition.name, unite.handle],
   [calc.definition.name, calc.handle],
+  [schedule.definition.name, schedule.handle],
+  [mail.definition.name, mail.handle],
 ]);
 
-export function handleCommand(name, interaction) {
-  return handlers.get(name ?? "")?.(interaction) ?? null;
+export function handleCommand(name, interaction, env) {
+  return handlers.get(name ?? "")?.(interaction, env) ?? null;
 }

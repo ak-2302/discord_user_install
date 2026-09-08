@@ -64,7 +64,7 @@ Discordの検証リクエストに成功し、`/ping` が登録済みであれ�
 
 - `GET /`：稼働確認
 - `POST /interactions`：Discord Interactions受信（署名検証付き）
-- `POST /register`：未提供。コマンド登録はローカルの `scripts/register.ts` で実行
+- `POST /register`：未提供。コマンド登録はローカルの `scripts/register.js` で実行
 
 登録済みコマンド:
 
@@ -78,7 +78,38 @@ Discordの検証リクエストに成功し、`/ping` が登録済みであれ�
 - `/league`：LoL日本語Wiki・OP.GG・LoLalyticsのチャンピオンページを表示（例：`champion:ゾーイ`）
 - `/unite`：ポケモンユナイト日本語Wikiのページを表示（例：`pokemon:アブソル`）
 - `/calc`：四則演算の計算式を計算（例：`expression:(12 + 3) * 4`）
+- `/schedule`：今日のGoogle Calendar予定を確認
+- `/mail`：未読Gmailを最大10件確認（本文は表示しません）
 
 全コマンドはユーザーインストールに対応し、サーバー内チャンネル・Bot DM・通常DM・グループDMで利用できます。コマンド定義を変更した場合は `npm run register` で再登録してください。
 
 コマンドの実装は `src/commands/` に1コマンド1ファイルで追加します。定義と処理を作成した後、`src/commands/index.js` に登録してください。
+
+## Google Apps Script連携
+
+`gas/Code.gs`をGoogle Apps Scriptプロジェクトに貼り付け、プロジェクトのタイムゾーンを`Asia/Tokyo`に設定します。GASの「プロジェクトの設定」>「スクリプト プロパティ」に次の2項目を登録してください。
+
+```text
+GAS_SHARED_TOKEN=Workerと共有する長いランダム文字列
+DISCORD_ALLOWED_USER_ID=利用を許可するDiscordユーザーID
+```
+
+「デプロイ」>「新しいデプロイ」から種類を「ウェブアプリ」にし、次の設定でデプロイします。
+
+- 次のユーザーとして実行：自分
+- アクセスできるユーザー：全員
+
+表示された`/exec` URLを`GAS_WEB_APP_URL`として使用します。GASはGoogleアカウント本人のCalendarとGmailを読み取り、初回実行時に必要な権限を要求します。メール本文・添付ファイルは取得しません。
+
+## Worker Secretの設定
+
+ローカルでは`.dev.vars`に設定し、本番では次のコマンドで登録します。
+
+```bash
+npx wrangler secret put DISCORD_PUBLIC_KEY
+npx wrangler secret put GAS_WEB_APP_URL
+npx wrangler secret put GAS_SHARED_TOKEN
+npx wrangler secret put DISCORD_ALLOWED_USER_ID
+```
+
+`DISCORD_ALLOWED_USER_ID`にはDiscordの開発者モードで「ユーザーIDをコピー」した値を設定します。共有トークンを再発行するときは、GASのスクリプトプロパティとWorker Secretの`GAS_SHARED_TOKEN`を同じ新しい値に更新してください。その後、`npm run deploy`と`npm run register`を実行します。
