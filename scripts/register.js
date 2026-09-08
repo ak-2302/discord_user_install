@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { definitions } from "../src/commands.js";
+import { definitions } from "../src/commands/index.js";
 
 const applicationId = process.env.DISCORD_APPLICATION_ID;
 const token = process.env.DISCORD_TOKEN;

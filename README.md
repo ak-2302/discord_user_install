@@ -91,7 +91,6 @@ Discordの検証リクエストに成功し、`/ping` が登録済みであれ�
 
 ```text
 GAS_SHARED_TOKEN=Workerと共有する長いランダム文字列
-DISCORD_ALLOWED_USER_ID=利用を許可するDiscordユーザーID
 ```
 
 「デプロイ」>「新しいデプロイ」から種類を「ウェブアプリ」にし、次の設定でデプロイします。
@@ -109,7 +108,6 @@ DISCORD_ALLOWED_USER_ID=利用を許可するDiscordユーザーID
 npx wrangler secret put DISCORD_PUBLIC_KEY
 npx wrangler secret put GAS_WEB_APP_URL
 npx wrangler secret put GAS_SHARED_TOKEN
-npx wrangler secret put DISCORD_ALLOWED_USER_ID
 ```
 
-`DISCORD_ALLOWED_USER_ID`にはDiscordの開発者モードで「ユーザーIDをコピー」した値を設定します。共有トークンを再発行するときは、GASのスクリプトプロパティとWorker Secretの`GAS_SHARED_TOKEN`を同じ新しい値に更新してください。その後、`npm run deploy`と`npm run register`を実行します。
+共有トークンを再発行するときは、GASのスクリプトプロパティとWorker Secretの`GAS_SHARED_TOKEN`を同じ新しい値に更新してください。その後、`npm run deploy`と`npm run register`を実行します。

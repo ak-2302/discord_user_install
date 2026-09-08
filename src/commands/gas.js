@@ -8,7 +8,6 @@ export function privateResponse(content) {
 
 export async function callGas(action, interaction, env) {
   const userId = interaction.user?.id ?? interaction.member?.user?.id;
-  if (!userId || userId !== env.DISCORD_ALLOWED_USER_ID) return privateResponse("このコマンドを実行する権限がありません。");
   if (!env.GAS_WEB_APP_URL || !env.GAS_SHARED_TOKEN) return privateResponse("GAS連携が設定されていません。");
 
   const controller = new AbortController();

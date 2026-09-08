@@ -1,13 +1,11 @@
 // [AI] GAS Webアプリのスクリプトプロパティに次の値を設定してください。
 // GAS_SHARED_TOKEN: Workerと共有する長いランダム文字列
-// DISCORD_ALLOWED_USER_ID: 利用を許可するDiscordユーザーID
 
 function doPost(e) {
   try {
     var request = JSON.parse(e.postData.contents);
     var properties = PropertiesService.getScriptProperties();
-    if (request.token !== properties.getProperty('GAS_SHARED_TOKEN') ||
-        request.discordUserId !== properties.getProperty('DISCORD_ALLOWED_USER_ID')) {
+    if (request.token !== properties.getProperty('GAS_SHARED_TOKEN')) {
       return response({ ok: false, error: 'unauthorized' });
     }
     if (request.action === 'schedule') return response({ ok: true, events: getTodayEvents() });
