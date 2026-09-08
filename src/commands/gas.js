@@ -14,12 +14,19 @@ export async function callGas(action, interaction, env) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), GAS_TIMEOUT_MS);
   try {
-    const response = await fetch(env.GAS_WEB_APP_URL, {
+    const request = {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ token: env.GAS_SHARED_TOKEN, action, discordUserId: userId }),
       signal: controller.signal,
-    });
+      redirect: "manual",
+    };
+    let response = await fetch(env.GAS_WEB_APP_URL, request);
+    if (response.status >= 300 && response.status < 400) {
+      const location = response.headers.get("location");
+      if (!location) throw new Error("GAS redirect did not include a location");
+      response = await fetch(location, { signal: controller.signal });
+    }
     if (!response.ok) throw new Error(`GAS responded with ${response.status}`);
     const result = await response.json();
     if (!result.ok) throw new Error("GAS returned an application error");
