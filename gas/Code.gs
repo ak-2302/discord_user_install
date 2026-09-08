@@ -8,7 +8,7 @@ function doPost(e) {
     if (request.token !== properties.getProperty('GAS_SHARED_TOKEN')) {
       return response({ ok: false, error: 'unauthorized' });
     }
-    if (request.action === 'schedule') return response({ ok: true, events: getTodayEvents() });
+    if (request.action === 'schedule') return response({ ok: true, label: request.date === 'tomorrow' ? '明日' : '今日', events: getSchedule(request.date) });
     if (request.action === 'mail') return response({ ok: true, messages: getUnreadMessages() });
     return response({ ok: false, error: 'unsupported_action' });
   } catch (error) {
@@ -17,11 +17,12 @@ function doPost(e) {
   }
 }
 
-function getTodayEvents() {
+function getSchedule(dateOption) {
   var calendar = CalendarApp.getDefaultCalendar();
   var timezone = Session.getScriptTimeZone() || 'Asia/Tokyo';
   var now = new Date();
-  var start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  var offset = dateOption === 'tomorrow' ? 1 : 0;
+  var start = new Date(now.getFullYear(), now.getMonth(), now.getDate() + offset);
   var end = new Date(start.getTime() + 24 * 60 * 60 * 1000);
   return calendar.getEvents(start, end).map(function (event) {
     return {

@@ -29,5 +29,6 @@ const handlers = new Map([
 ]);
 
 export function handleCommand(name, interaction, env) {
-  return handlers.get(name ?? "")?.(interaction, env) ?? null;
+  const commandName = name?.startsWith("schedule") ? "schedule" : name?.startsWith("mail") ? "mail" : name;
+  return handlers.get(commandName ?? "")?.(interaction, env) ?? null;
 }

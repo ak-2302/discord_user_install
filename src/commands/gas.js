@@ -6,7 +6,7 @@ export function privateResponse(content) {
   });
 }
 
-export async function callGas(action, interaction, env) {
+export async function callGas(action, interaction, env, parameters = {}) {
   const userId = interaction.user?.id ?? interaction.member?.user?.id;
   if (!env.GAS_WEB_APP_URL || !env.GAS_SHARED_TOKEN) return privateResponse("GAS連携が設定されていません。");
 
@@ -16,7 +16,7 @@ export async function callGas(action, interaction, env) {
     const request = {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ token: env.GAS_SHARED_TOKEN, action, discordUserId: userId }),
+      body: JSON.stringify({ token: env.GAS_SHARED_TOKEN, action, discordUserId: userId, ...parameters }),
       signal: controller.signal,
       redirect: "manual",
     };
@@ -38,9 +38,14 @@ export async function callGas(action, interaction, env) {
   }
 }
 
-export function gasResponse(result, formatter) {
+export function gasResponse(result, formatter, interaction) {
   if (result instanceof Response) return result;
-  return new Response(JSON.stringify({ type: 4, data: { content: formatter(result) } }), {
+  const data = formatter(result);
+  return new Response(JSON.stringify({ type: interaction?.type === 3 ? 7 : 4, data }), {
     headers: { "content-type": "application/json" },
   });
+}
+
+export function embedData(embed, components) {
+  return { embeds: [embed], components };
 }

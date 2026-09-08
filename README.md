@@ -78,8 +78,8 @@ Discordの検証リクエストに成功し、`/ping` が登録済みであれ�
 - `/league`：LoL日本語Wiki・OP.GG・LoLalyticsのチャンピオンページを表示（例：`champion:ゾーイ`）
 - `/unite`：ポケモンユナイト日本語Wikiのページを表示（例：`pokemon:アブソル`）
 - `/calc`：四則演算の計算式を計算（例：`expression:(12 + 3) * 4`）
-- `/schedule`：今日のGoogle Calendar予定を確認
-- `/mail`：未読Gmailを最大10件確認（本文は表示しません）
+- `/schedule`：Embedで今日／明日のGoogle Calendar予定を確認（プルダウン・再読み込み対応）
+- `/mail`：Embedで未読Gmailを最大10件確認（再読み込み対応、本文は表示しません）
 
 全コマンドはユーザーインストールに対応し、サーバー内チャンネル・Bot DM・通常DM・グループDMで利用できます。コマンド定義を変更した場合は `npm run register` で再登録してください。
 
