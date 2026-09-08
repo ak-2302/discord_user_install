@@ -31,10 +31,9 @@ DISCORD_APPLICATION_ID=your_discord_application_id
 DISCORD_TOKEN=your_discord_bot_token
 ```
 
-型定義生成とローカル起動:
+ローカル起動:
 
 ```bash
-npm run types
 npm run dev
 ```
 
@@ -82,4 +81,4 @@ Discordの検証リクエストに成功し、`/ping` が登録済みであれ�
 
 全コマンドはユーザーインストールに対応し、サーバー内チャンネル・Bot DM・通常DM・グループDMで利用できます。コマンド定義を変更した場合は `npm run register` で再登録してください。
 
-コマンドの実装は `src/commands/` に1コマンド1ファイルで追加します。定義と処理を作成した後、`src/commands/index.ts` に登録してください。
+コマンドの実装は `src/commands/` に1コマンド1ファイルで追加します。定義と処理を作成した後、`src/commands/index.js` に登録してください。

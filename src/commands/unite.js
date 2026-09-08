@@ -1,12 +1,11 @@
-import type { CommandHandler, DiscordCommand } from "./types";
 
-export const definition: DiscordCommand = {
+export const definition  = {
   name: "unite",
   description: "ポケモンユナイトの攻略ページを表示します",
   options: [{ type: 3, name: "pokemon", description: "ポケモン名（例: アブソル）", required: true }],
 };
 
-export const handle: CommandHandler = (interaction) => {
+export const handle  = (interaction) => {
   const pokemon = String(interaction.data?.options?.find((option) => option.name === "pokemon")?.value ?? "").trim();
   if (!pokemon) {
     return new Response(JSON.stringify({ type: 4, data: { content: "ポケモン名を指定してください。", flags: 64 } }), {

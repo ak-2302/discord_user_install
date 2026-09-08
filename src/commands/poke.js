@@ -1,20 +1,14 @@
 import pokemonData from "../data/pokemon.json" with { type: "json" };
-import type { CommandHandler, DiscordCommand } from "./types";
 
-interface PokemonEntry {
-  name: string;
-  href: string;
-}
-
-export const definition: DiscordCommand = {
+export const definition  = {
   name: "poke",
   description: "ポケモンの図鑑ページを検索します",
   options: [{ type: 3, name: "name", description: "ポケモン名（例: ピカチュウ）", required: true }],
 };
 
-const entries = pokemonData as PokemonEntry[];
+const entries = pokemonData ;
 
-export const handle: CommandHandler = (interaction) => {
+export const handle  = (interaction) => {
   const query = String(interaction.data?.options?.find((option) => option.name === "name")?.value ?? "").trim();
   const matches = entries.filter((entry) => entry.name === query || entry.name.startsWith(`${query} (`) || entry.name.startsWith(`${query}（`));
   if (matches.length === 0) {

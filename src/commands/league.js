@@ -1,21 +1,11 @@
-import type { CommandHandler, DiscordCommand } from "./types";
 
-export const definition: DiscordCommand = {
+export const definition  = {
   name: "league",
   description: "LoLチャンピオンの攻略リンクを表示します",
   options: [{ type: 3, name: "champion", description: "チャンピオン名（例: ゾーイ）", required: true }],
 };
 
-interface ChampionSummary {
-  id: string;
-  name: string;
-}
-
-interface ChampionDataResponse {
-  data: Record<string, ChampionSummary>;
-}
-
-const slugOverrides: Record<string, string> = {
+const slugOverrides  = {
   AurelionSol: "aurelion-sol",
   Belveth: "belveth",
   ChoGath: "chogath",
@@ -33,19 +23,19 @@ const slugOverrides: Record<string, string> = {
   XinZhao: "xin-zhao",
 };
 
-function toSlug(id: string): string {
+function toSlug(id) {
   return slugOverrides[id] ?? id.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase();
 }
 
-export const handle: CommandHandler = async (interaction) => {
+export const handle  = async (interaction) => {
   const query = String(interaction.data?.options?.find((option) => option.name === "champion")?.value ?? "").trim();
   const versionsResponse = await fetch("https://ddragon.leagueoflegends.com/api/versions.json");
   if (!versionsResponse.ok) throw new Error(`Data Dragon versions error: ${versionsResponse.status}`);
-  const versions = (await versionsResponse.json()) as string[];
+  const versions = (await versionsResponse.json()) ;
   const version = versions[0];
   const championsResponse = await fetch(`https://ddragon.leagueoflegends.com/cdn/${version}/data/ja_JP/champion.json`);
   if (!championsResponse.ok) throw new Error(`Data Dragon champion error: ${championsResponse.status}`);
-  const champions = (await championsResponse.json()) as ChampionDataResponse;
+  const champions = (await championsResponse.json()) ;
   const champion = Object.values(champions.data).find((item) => item.name === query || item.id.toLowerCase() === query.toLowerCase());
   if (!champion) {
     return new Response(JSON.stringify({ type: 4, data: { content: `「${query}」が見つかりませんでした。日本語名で指定してください。`, flags: 64 } }), {

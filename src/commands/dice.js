@@ -1,6 +1,5 @@
-import type { CommandHandler, DiscordCommand } from "./types";
 
-export const definition: DiscordCommand = {
+export const definition  = {
   name: "dice",
   description: "指定した個数・面数のサイコロを振ります",
   options: [
@@ -13,7 +12,7 @@ export const definition: DiscordCommand = {
   ],
 };
 
-function roll(sides: number): number {
+function roll(sides )  {
   const values = new Uint32Array(1);
   const limit = Math.floor(0x1_0000_0000 / sides) * sides;
   do {
@@ -22,7 +21,7 @@ function roll(sides: number): number {
   return (values[0] % sides) + 1;
 }
 
-export const handle: CommandHandler = (interaction) => {
+export const handle  = (interaction) => {
   const expression = String(interaction.data?.options?.find((option) => option.name === "roll")?.value ?? "");
   const match = /^(\d+)d(\d+)$/i.exec(expression);
   if (!match) {

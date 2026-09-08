@@ -1,11 +1,9 @@
-import { handleCommand } from "./commands";
-import type { CommandInteraction } from "./commands/types";
+import { handleCommand } from "./commands/index.js";
 
-type RuntimeEnv = Env & { DISCORD_PUBLIC_KEY: string };
 
 const encoder = new TextEncoder();
 
-async function verifyDiscordRequest(request: Request, publicKey: string): Promise<string | null> {
+async function verifyDiscordRequest(request, publicKey) {
   const signature = request.headers.get("X-Signature-Ed25519");
   const timestamp = request.headers.get("X-Signature-Timestamp");
   if (!signature || !timestamp) return null;
@@ -27,24 +25,24 @@ async function verifyDiscordRequest(request: Request, publicKey: string): Promis
   return valid ? body : null;
 }
 
-function hexToBytes(value: string): Uint8Array {
+function hexToBytes(value) {
   if (!/^[0-9a-f]+$/i.test(value) || value.length % 2 !== 0) throw new Error("Invalid hex value");
   const bytes = new Uint8Array(value.length / 2);
   for (let i = 0; i < bytes.length; i++) bytes[i] = Number.parseInt(value.slice(i * 2, i * 2 + 2), 16);
   return bytes;
 }
 
-function json(data: unknown, status = 200): Response {
+function json(data , status = 200)  {
   return new Response(JSON.stringify(data), { status, headers: { "content-type": "application/json" } });
 }
 
 export default {
-  async fetch(request: Request, env: RuntimeEnv): Promise<Response> {
+  async fetch(request, env) {
     const url = new URL(request.url);
     if (request.method === "GET" && url.pathname === "/") return new Response("Discord user-install worker is running.");
     if (request.method !== "POST" || url.pathname !== "/interactions") return new Response("Not Found", { status: 404 });
 
-    let body: string | null;
+    let body;
     try {
       body = await verifyDiscordRequest(request, env.DISCORD_PUBLIC_KEY);
     } catch (error) {
@@ -53,9 +51,9 @@ export default {
     }
     if (!body) return new Response(" invalid request signature", { status: 401 });
 
-    const interaction = JSON.parse(body) as CommandInteraction;
+    const interaction = JSON.parse(body);
     if (interaction.type === 1) return json({ type: 1 });
     if (interaction.type === 2) return (await handleCommand(interaction.data?.name, interaction)) ?? json({ type: 4, data: { content: "未対応のコマンドです。", flags: 64 } });
     return json({ type: 4, data: { content: "未対応のコマンドです。", flags: 64 } });
   },
-} satisfies ExportedHandler<RuntimeEnv>;
+};
