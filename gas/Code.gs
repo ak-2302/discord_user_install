@@ -40,11 +40,23 @@ function getUnreadMessages() {
     var message = thread.getMessages()[thread.getMessageCount() - 1];
     return {
       receivedAt: formatDate(message.getDate(), timezone),
-      from: message.getFrom(),
+      sender: extractSenderName(message.getFrom()),
+      senderAddress: extractSenderAddress(message.getFrom()),
       subject: message.getSubject() || '(件名なし)',
+      body: message.getPlainBody() || '(本文なし)',
       url: 'https://mail.google.com/mail/u/0/#inbox/' + thread.getId()
     };
   });
+}
+
+function extractSenderName(from) {
+  var match = String(from).match(/^\s*(.*?)\s*<[^>]+>\s*$/);
+  return match ? (match[1].replace(/^"|"$/g, '') || extractSenderAddress(from)) : String(from);
+}
+
+function extractSenderAddress(from) {
+  var match = String(from).match(/<([^>]+)>/);
+  return match ? match[1] : String(from).trim();
 }
 
 function formatDate(date, timezone) {

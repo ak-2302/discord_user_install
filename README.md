@@ -79,7 +79,7 @@ Discordの検証リクエストに成功し、`/ping` が登録済みであれ�
 - `/unite`：ポケモンユナイト日本語Wikiのページを表示（例：`pokemon:アブソル`）
 - `/calc`：四則演算の計算式を計算（例：`expression:(12 + 3) * 4`）
 - `/schedule`：Embedで今日／明日のGoogle Calendar予定を確認（プルダウン・再読み込み対応）
-- `/mail`：Embedで未読Gmailを最大10件確認（再読み込み対応、本文は表示しません）
+- `/mail`：未読Gmailを最大10件、1通1Embedで確認（件名・本文・送信者・送信者アドレスを分離表示、受信日時はfooter、再読み込み対応）
 
 全コマンドはユーザーインストールに対応し、サーバー内チャンネル・Bot DM・通常DM・グループDMで利用できます。コマンド定義を変更した場合は `npm run register` で再登録してください。
 
@@ -98,7 +98,7 @@ GAS_SHARED_TOKEN=Workerと共有する長いランダム文字列
 - 次のユーザーとして実行：自分
 - アクセスできるユーザー：全員
 
-表示された`/exec` URLを`GAS_WEB_APP_URL`として使用します。GASはGoogleアカウント本人のCalendarとGmailを読み取り、初回実行時に必要な権限を要求します。メール本文・添付ファイルは取得しません。
+表示された`/exec` URLを`GAS_WEB_APP_URL`として使用します。GASはGoogleアカウント本人のCalendarとGmailを読み取り、初回実行時に必要な権限を要求します。メール本文はプレーンテキストとして取得して表示しますが、添付ファイルは取得しません。
 
 ## Worker Secretの設定
 
