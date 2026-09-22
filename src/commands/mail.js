@@ -6,13 +6,13 @@ export async function handle(interaction, env) {
   const result = await callGas("mail", interaction, env);
   return gasResponse(result, ({ messages = [] }) => {
     const embeds = messages.slice(0, 10).map((message) => ({
-      title: `✉️ ${truncate(message.subject || "(件名なし)", 240)}`,
+      title: `✉️ ${truncate(message.subject || "(件名なし)", 100)}`,
       url: message.url,
       color: 15158332,
       fields: [
-        { name: "送信者", value: truncate(message.sender || "(不明)", 1024), inline: true },
-        { name: "送信者アドレス", value: truncate(message.senderAddress || "(不明)", 1024), inline: true },
-        { name: "本文", value: truncate(message.body || "(本文なし)", 4096), inline: false },
+        { name: "送信者", value: truncate(message.sender || "(不明)", 80), inline: true },
+        { name: "送信者アドレス", value: truncate(message.senderAddress || "(不明)", 120), inline: true },
+        { name: "本文", value: truncate(message.body || "(本文なし)", 250), inline: false },
       ],
       footer: { text: `受信日時：${message.receivedAt || "不明"}` },
     }));
