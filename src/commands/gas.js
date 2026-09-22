@@ -1,4 +1,5 @@
-const GAS_TIMEOUT_MS = 2_500;
+const DEFAULT_GAS_TIMEOUT_MS = 2_500;
+const MAIL_GAS_TIMEOUT_MS = 10_000;
 
 export function privateResponse(content) {
   return new Response(JSON.stringify({ type: 4, data: { content, flags: 64 } }), {
@@ -11,7 +12,8 @@ export async function callGas(action, interaction, env, parameters = {}) {
   if (!env.GAS_WEB_APP_URL || !env.GAS_SHARED_TOKEN) return privateResponse("GAS連携が設定されていません。");
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), GAS_TIMEOUT_MS);
+  const timeoutMs = action === "mail" ? MAIL_GAS_TIMEOUT_MS : DEFAULT_GAS_TIMEOUT_MS;
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
   try {
     const request = {
       method: "POST",

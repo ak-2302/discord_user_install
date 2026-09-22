@@ -46,19 +46,28 @@ function deferredMailResponse(interaction) {
 }
 
 async function updateDeferredMail(interaction, env) {
-  const response = await handleCommand(
-    interaction.type === 2 ? interaction.data?.name : interaction.data?.custom_id,
-    interaction,
-    env,
-  );
-  const payload = await response.json();
   const endpoint = `https://discord.com/api/v10/webhooks/${interaction.application_id}/${interaction.token}/messages/@original`;
-  const update = await fetch(endpoint, {
-    method: "PATCH",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify(payload.data ?? {}),
-  });
-  if (!update.ok) console.error(JSON.stringify({ event: "discord_mail_update_error", status: update.status }));
+  try {
+    const response = await handleCommand(
+      interaction.type === 2 ? interaction.data?.name : interaction.data?.custom_id,
+      interaction,
+      env,
+    );
+    const payload = await response.json();
+    const update = await fetch(endpoint, {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload.data ?? {}),
+    });
+    if (!update.ok) throw new Error(`Discord update failed with ${update.status}`);
+  } catch (error) {
+    console.error(JSON.stringify({ event: "discord_mail_update_error", error: String(error) }));
+    await fetch(endpoint, {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ content: "メールを取得できませんでした。しばらくしてから再試行してください。", flags: 64, embeds: [], components: [] }),
+    });
+  }
 }
 
 export default {
