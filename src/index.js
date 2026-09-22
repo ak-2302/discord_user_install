@@ -54,6 +54,7 @@ async function updateDeferredMail(interaction, env) {
       env,
     );
     const payload = await response.json();
+    if (payload.data) delete payload.data.flags;
     const update = await fetch(endpoint, {
       method: "PATCH",
       headers: { "content-type": "application/json" },
@@ -65,7 +66,7 @@ async function updateDeferredMail(interaction, env) {
     await fetch(endpoint, {
       method: "PATCH",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ content: "メールを取得できませんでした。しばらくしてから再試行してください。", flags: 64, embeds: [], components: [] }),
+      body: JSON.stringify({ content: "メールを取得できませんでした。しばらくしてから再試行してください。", embeds: [], components: [] }),
     });
   }
 }
