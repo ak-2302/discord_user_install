@@ -1,5 +1,5 @@
 const DEFAULT_GAS_TIMEOUT_MS = 2_500;
-const MAIL_GAS_TIMEOUT_MS = 10_000;
+const MAIL_GAS_TIMEOUT_MS = 25_000;
 
 export function privateResponse(content) {
   return new Response(JSON.stringify({ type: 4, data: { content, flags: 64 } }), {
