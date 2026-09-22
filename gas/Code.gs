@@ -8,7 +8,7 @@ function doPost(e) {
     if (request.token !== properties.getProperty('GAS_SHARED_TOKEN')) {
       return response({ ok: false, error: 'unauthorized' });
     }
-    if (request.action === 'schedule') return response({ ok: true, label: request.date === 'tomorrow' ? '明日' : '今日', events: getSchedule(request.date) });
+    if (request.action === 'schedule') return response({ ok: true, label: getScheduleLabel(request.date), events: getSchedule(request.date) });
     if (request.action === 'mail') return response({ ok: true, messages: getUnreadMessages() });
     return response({ ok: false, error: 'unsupported_action' });
   } catch (error) {
@@ -21,9 +21,21 @@ function getSchedule(dateOption) {
   var calendar = CalendarApp.getDefaultCalendar();
   var timezone = Session.getScriptTimeZone() || 'Asia/Tokyo';
   var now = new Date();
-  var offset = dateOption === 'tomorrow' ? 1 : 0;
-  var start = new Date(now.getFullYear(), now.getMonth(), now.getDate() + offset);
-  var end = new Date(start.getTime() + 24 * 60 * 60 * 1000);
+  var start;
+  var end;
+  if (dateOption === 'this_month') {
+    start = new Date(now.getFullYear(), now.getMonth(), 1);
+    end = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+  } else if (/^\d{4}-\d{2}-\d{2}$/.test(String(dateOption))) {
+    var parts = String(dateOption).split('-').map(Number);
+    start = new Date(parts[0], parts[1] - 1, parts[2]);
+    if (start.getFullYear() !== parts[0] || start.getMonth() !== parts[1] - 1 || start.getDate() !== parts[2]) return [];
+    end = new Date(parts[0], parts[1] - 1, parts[2] + 1);
+  } else {
+    var offset = dateOption === 'tomorrow' ? 1 : 0;
+    start = new Date(now.getFullYear(), now.getMonth(), now.getDate() + offset);
+    end = new Date(start.getTime() + 24 * 60 * 60 * 1000);
+  }
   return calendar.getEvents(start, end).map(function (event) {
     return {
       start: formatDate(event.getStartTime(), timezone),
@@ -32,6 +44,13 @@ function getSchedule(dateOption) {
       location: event.getLocation() || ''
     };
   });
+}
+
+function getScheduleLabel(dateOption) {
+  if (dateOption === 'tomorrow') return '明日';
+  if (dateOption === 'this_month') return '今月';
+  if (/^\d{4}-\d{2}-\d{2}$/.test(String(dateOption))) return String(dateOption);
+  return '今日';
 }
 
 function getUnreadMessages() {
