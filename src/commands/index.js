@@ -10,8 +10,9 @@ import * as unite from "./unite.js";
 import * as calc from "./calc.js";
 import * as schedule from "./schedule.js";
 import * as mail from "./mail.js";
+import * as memo from "./memo.js";
 
-export const definitions = [ping.definition, dice.definition, weather.definition, qr.definition, coin.definition, choice.definition, poke.definition, league.definition, unite.definition, calc.definition, schedule.definition, mail.definition];
+export const definitions = [ping.definition, dice.definition, weather.definition, qr.definition, coin.definition, choice.definition, poke.definition, league.definition, unite.definition, calc.definition, schedule.definition, mail.definition, memo.definition];
 
 const handlers = new Map([
   [ping.definition.name, ping.handle],
@@ -26,6 +27,7 @@ const handlers = new Map([
   [calc.definition.name, calc.handle],
   [schedule.definition.name, schedule.handle],
   [mail.definition.name, mail.handle],
+  [memo.definition.name, memo.handle],
 ]);
 
 export function handleCommand(name, interaction, env) {
