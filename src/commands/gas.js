@@ -38,9 +38,10 @@ export async function callGas(action, interaction, env, parameters = {}) {
   }
 }
 
-export function gasResponse(result, formatter, interaction) {
+export function gasResponse(result, formatter, interaction, { ephemeral = false } = {}) {
   if (result instanceof Response) return result;
   const data = formatter(result);
+  if (ephemeral && interaction?.type !== 3) data.flags = 64;
   return new Response(JSON.stringify({ type: interaction?.type === 3 ? 7 : 4, data }), {
     headers: { "content-type": "application/json" },
   });

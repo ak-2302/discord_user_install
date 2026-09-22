@@ -18,7 +18,7 @@ export async function handle(interaction, env) {
     }));
     if (embeds.length === 0) embeds.push({ title: "✉️ 未読メール", description: "未読メールはありません。", color: 15158332 });
     return { embeds, components: [{ type: 1, components: [{ type: 2, style: 1, label: "再読み込み", custom_id: "mail_refresh" }] }] };
-  }, interaction);
+  }, interaction, { ephemeral: true });
 }
 
 function truncate(value, maxLength) {
