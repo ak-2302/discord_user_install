@@ -1,5 +1,5 @@
 const STAMP_CUSTOM_ID_PREFIX = "stamp:";
-const MAX_STAMPS = 25;
+const MAX_STAMPS = 125;
 
 export const definition = { name: "stamp", description: "スタンプを選んで投稿します" };
 
@@ -10,15 +10,19 @@ export async function handle(interaction, env) {
 
     return response({
       content: "投稿するスタンプを選んでください。",
-      components: chunk(stamps, 5).map((row) => ({
+      components: chunk(stamps, 25).map((row, index) => ({
         type: 1,
-        components: row.map((stamp) => ({
-          type: 2,
-          style: 2,
-          label: stamp.label,
-          emoji: stamp.emoji,
-          custom_id: `${STAMP_CUSTOM_ID_PREFIX}${stamp.id}`,
-        })),
+        components: [{
+          type: 3,
+          custom_id: `${STAMP_CUSTOM_ID_PREFIX}select:${index}`,
+          placeholder: `スタンプを選択（${index * 25 + 1}〜${index * 25 + row.length}）`,
+          options: row.map((stamp) => ({
+            label: stamp.label,
+            value: stamp.id,
+            description: stamp.description,
+            emoji: stamp.emoji,
+          })),
+        }],
       })),
     }, true);
   } catch (error) {
@@ -32,7 +36,9 @@ export function isStampInteraction(name) {
 }
 
 export async function processStampInteraction(interaction, env) {
-  const stampId = interaction.data?.custom_id?.slice(STAMP_CUSTOM_ID_PREFIX.length);
+  const stampId = interaction.data?.custom_id?.startsWith(`${STAMP_CUSTOM_ID_PREFIX}select:`)
+    ? interaction.data.values?.[0]
+    : interaction.data?.custom_id?.slice(STAMP_CUSTOM_ID_PREFIX.length);
   if (!stampId) return;
 
   try {
@@ -74,11 +80,12 @@ async function loadStamps(env) {
 
 function validateStamp(stamp) {
   if (!stamp || !/^[a-z0-9][a-z0-9_-]{0,31}$/.test(stamp.id)) return null;
-  if (!stamp.label || String(stamp.label).length > 80 || !isHttpsUrl(stamp.gif)) return null;
+  if (!stamp.label || String(stamp.label).length > 100 || !isHttpsUrl(stamp.gif)) return null;
   if (!stamp.emoji || (!stamp.emoji.name && !stamp.emoji.id)) return null;
   return {
     id: stamp.id,
     label: String(stamp.label),
+    description: stamp.description ? String(stamp.description).slice(0, 100) : undefined,
     gif: stamp.gif,
     emoji: {
       ...(stamp.emoji.name ? { name: String(stamp.emoji.name) } : {}),
