@@ -57,6 +57,22 @@ npm run deploy
 npx wrangler secret put DISCORD_PUBLIC_KEY
 ```
 
+### GitHub Actionsによる自動デプロイ
+
+`main`へpushすると`.github/workflows/deploy.yml`がCloudflare Workersへ自動デプロイします。GitHubリポジトリのSettings > Secrets and variables > Actionsに、次のRepository secretsを登録してください。
+
+```text
+CLOUDFLARE_API_TOKEN
+CLOUDFLARE_ACCOUNT_ID
+```
+
+API TokenにはWorkerのデプロイ権限を付与します。Discord公開鍵やスタンプマニフェストURLなどのWorker Secretは、初回だけ手動で次のように登録します。
+
+```bash
+npx wrangler secret put DISCORD_PUBLIC_KEY
+npx wrangler secret put STAMP_MANIFEST_URL
+```
+
 デプロイ後に表示されたWorker URLの `/interactions` を、Developer Portalの General Information > Interactions Endpoint URL に設定します。
 Discordの検証リクエストに成功し、`/ping` が登録済みであれば、ユーザーインストールしたアプリから実行できます。
 
