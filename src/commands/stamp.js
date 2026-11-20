@@ -1,5 +1,6 @@
 const STAMP_CUSTOM_ID_PREFIX = "stamp:";
 const MAX_STAMPS = 125;
+const DEFAULT_STAMP_MANIFEST_URL = "https://raw.githubusercontent.com/ak-2302/discord-stamps/main/stamps/manifest.json";
 
 export const definition = { name: "stamp", description: "スタンプを選んで投稿します" };
 
@@ -66,9 +67,8 @@ export async function processStampInteraction(interaction, env) {
 }
 
 async function loadStamps(env) {
-  const manifestUrl = env.STAMP_MANIFEST_URL;
-  if (!manifestUrl) throw new Error("STAMP_MANIFEST_URL is not configured");
-  const response = await fetch(manifestUrl, { cf: { cacheTtl: 300 } });
+  const manifestUrl = env.STAMP_MANIFEST_URL || DEFAULT_STAMP_MANIFEST_URL;
+  const response = await fetch(manifestUrl);
   if (!response.ok) throw new Error(`Manifest request failed: ${response.status}`);
   const manifest = await response.json();
   if (manifest.version !== 1 || !Array.isArray(manifest.stamps)) throw new Error("Invalid stamp manifest");
