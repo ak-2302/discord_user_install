@@ -81,10 +81,13 @@ Discordの検証リクエストに成功し、`/ping` が登録済みであれ�
 - `/schedule`：Embedで今日・明日・今月、または指定日のGoogle Calendar予定を確認（プルダウン・日付入力・再読み込み対応）
 - `/mail`：本人だけに見える非公開応答で、未読Gmailを最大10件、1通1Embedで確認（件名・本文・送信者・送信者アドレスを分離表示、受信日時はfooter、再読み込み対応）
 - `/memo`：仮データのメモをEmbedで表示
+- `/stamp`：公開GitHubリポジトリのマニフェストからスタンプを選び、ephemeralな絵文字ボタンで選択したGIFを投稿
 
 全コマンドはユーザーインストールに対応し、サーバー内チャンネル・Bot DM・通常DM・グループDMで利用できます。コマンド定義を変更した場合は `npm run register` で再登録してください。
 
 コマンドの実装は `src/commands/` に1コマンド1ファイルで追加します。定義と処理を作成した後、`src/commands/index.js` に登録してください。
+
+`/stamp` は `STAMP_MANIFEST_URL`（HTTPSの公開URL）からスタンプ定義を取得します。マニフェストの形式は、`/Users/myuser/Documents/GitHub/discord-stamps/README.md` に作成したスタンプ仕様を参照してください。
 
 ## Google Apps Script連携
 
@@ -109,6 +112,7 @@ GAS_SHARED_TOKEN=Workerと共有する長いランダム文字列
 npx wrangler secret put DISCORD_PUBLIC_KEY
 npx wrangler secret put GAS_WEB_APP_URL
 npx wrangler secret put GAS_SHARED_TOKEN
+npx wrangler secret put STAMP_MANIFEST_URL
 ```
 
 共有トークンを再発行するときは、GASのスクリプトプロパティとWorker Secretの`GAS_SHARED_TOKEN`を同じ新しい値に更新してください。その後、`npm run deploy`と`npm run register`を実行します。
