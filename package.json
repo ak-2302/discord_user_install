@@ -7,10 +7,12 @@
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
     "register": "node scripts/register.js",
+    "generate-emojis": "node scripts/generate-emojis.js",
     "check": "wrangler deploy --dry-run"
   },
   "devDependencies": {
     "dotenv": "latest",
-    "wrangler": "latest"
+    "wrangler": "latest",
+    "sharp": "latest"
   }
 }

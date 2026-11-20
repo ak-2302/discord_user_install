@@ -1,4 +1,4 @@
 DISCORD_PUBLIC_KEY=your_discord_application_public_key
-STAMP_MANIFEST_URL=https://raw.githubusercontent.com/OWNER/REPOSITORY/main/stamps/manifest.json
+STAMP_MANIFEST_URL=https://raw.githubusercontent.com/ak-2302/discord-stamps/main/stamps/manifest.json
 GAS_WEB_APP_URL=https://script.google.com/macros/s/your_deployment_id/exec
 GAS_SHARED_TOKEN=replace_with_a_long_random_secret
