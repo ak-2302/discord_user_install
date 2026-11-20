@@ -9,6 +9,7 @@
     "register": "node scripts/register.js",
     "generate-emojis": "node scripts/generate-emojis.js",
     "build-stamp-manifest": "node scripts/build-stamp-manifest.js",
+    "sync-stamp-emojis": "node scripts/sync-stamp-emojis.js",
     "check": "wrangler deploy --dry-run"
   },
   "devDependencies": {
