@@ -1,5 +1,5 @@
 import { handleCommand } from "./commands/index.js";
-import { isStampInteraction, processStampInteraction } from "./commands/stamp.js";
+import { isStampInteraction, isStampPageInteraction, processStampInteraction, renderStampPageInteraction } from "./commands/stamp.js";
 
 
 const encoder = new TextEncoder();
@@ -89,6 +89,9 @@ export default {
 
     const interaction = JSON.parse(body);
     if (interaction.type === 1) return json({ type: 1 });
+    if (interaction.type === 3 && isStampPageInteraction(interaction.data?.custom_id)) {
+      return await renderStampPageInteraction(interaction, env);
+    }
     if (interaction.type === 3 && isStampInteraction(interaction.data?.custom_id)) {
       ctx.waitUntil(processStampInteraction(interaction, env));
       return json({ type: 6 });

@@ -1,5 +1,6 @@
 const STAMP_CUSTOM_ID_PREFIX = "stamp:";
-const MAX_STAMPS = 125;
+const MAX_STAMPS = 239;
+const STAMPS_PER_PAGE = 20;
 const DEFAULT_STAMP_MANIFEST_URL = "https://raw.githubusercontent.com/ak-2302/discord-stamps/main/stamps/manifest.json";
 
 export const definition = { name: "stamp", description: "スタンプを選んで投稿します" };
@@ -9,23 +10,7 @@ export async function handle(interaction, env) {
     const stamps = await loadStamps(env);
     if (stamps.length === 0) return response("スタンプが設定されていません。", true);
 
-    return response({
-      content: "投稿するスタンプを選んでください。",
-      components: chunk(stamps, 25).map((row, index) => ({
-        type: 1,
-        components: [{
-          type: 3,
-          custom_id: `${STAMP_CUSTOM_ID_PREFIX}select:${index}`,
-          placeholder: `スタンプを選択（${index * 25 + 1}〜${index * 25 + row.length}）`,
-          options: row.map((stamp) => ({
-            label: stamp.label,
-            value: stamp.id,
-            description: stamp.description,
-            emoji: stamp.emoji,
-          })),
-        }],
-      })),
-    }, true);
+    return stampPageResponse(stamps, 0, true);
   } catch (error) {
     console.error(JSON.stringify({ event: "stamp_load_error", error: String(error) }));
     return response("スタンプを読み込めませんでした。管理者に設定を確認してもらってください。", true);
@@ -34,6 +19,23 @@ export async function handle(interaction, env) {
 
 export function isStampInteraction(name) {
   return name?.startsWith(STAMP_CUSTOM_ID_PREFIX) ?? false;
+}
+
+export function isStampPageInteraction(name) {
+  return /^stamp:page:\d+$/.test(name ?? "");
+}
+
+export async function renderStampPageInteraction(interaction, env) {
+  try {
+    const stamps = await loadStamps(env);
+    const page = Number(interaction.data.custom_id.slice(`${STAMP_CUSTOM_ID_PREFIX}page:`.length));
+    return stampPageResponse(stamps, page, false, 7);
+  } catch (error) {
+    console.error(JSON.stringify({ event: "stamp_page_error", error: String(error) }));
+    return new Response(JSON.stringify({ type: 4, data: { content: "スタンプを読み込めませんでした。", flags: 64 } }), {
+      headers: { "content-type": "application/json" },
+    });
+  }
 }
 
 export async function processStampInteraction(interaction, env) {
@@ -105,6 +107,34 @@ function isHttpsUrl(value) {
 
 function response(data, ephemeral) {
   return new Response(JSON.stringify({ type: 4, data: typeof data === "string" ? { content: data, flags: ephemeral ? 64 : 0 } : { ...data, flags: ephemeral ? 64 : 0 } }), {
+    headers: { "content-type": "application/json" },
+  });
+}
+
+function stampPageResponse(stamps, page, ephemeral, type = 4) {
+  const pageCount = Math.ceil(stamps.length / STAMPS_PER_PAGE);
+  const safePage = Math.max(0, Math.min(page, pageCount - 1));
+  const pageStamps = stamps.slice(safePage * STAMPS_PER_PAGE, (safePage + 1) * STAMPS_PER_PAGE);
+  const rows = chunk(pageStamps, 5).map((row) => ({
+    type: 1,
+    components: row.map((stamp) => ({
+      type: 2,
+      style: 2,
+      label: stamp.label,
+      emoji: stamp.emoji,
+      custom_id: `${STAMP_CUSTOM_ID_PREFIX}${stamp.id}`,
+    })),
+  }));
+  if (pageCount > 1) rows.push({
+    type: 1,
+    components: [
+      { type: 2, style: 2, label: "前へ", custom_id: `${STAMP_CUSTOM_ID_PREFIX}page:${safePage - 1}`, disabled: safePage === 0 },
+      { type: 2, style: 2, label: `ページ ${safePage + 1}/${pageCount}`, custom_id: `${STAMP_CUSTOM_ID_PREFIX}page:${safePage}`, disabled: true },
+      { type: 2, style: 2, label: "次へ", custom_id: `${STAMP_CUSTOM_ID_PREFIX}page:${safePage + 1}`, disabled: safePage === pageCount - 1 },
+    ],
+  });
+  const data = { content: `投稿するスタンプを選んでください（${safePage + 1}/${pageCount}）`, components: rows };
+  return new Response(JSON.stringify({ type, data: ephemeral ? { ...data, flags: 64 } : data }), {
     headers: { "content-type": "application/json" },
   });
 }
